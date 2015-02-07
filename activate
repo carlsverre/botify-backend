@@ -43,6 +43,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
             ;;
     esac
 else
+    make venv
+
     # include the virtualenv's environment
     export VIRTUAL_ENV_DISABLE_PROMPT=1
     source "$PYTHON_ENV/bin/activate"
