@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')))
+
+import signal
+import threading
+
+from botify.util.thread_manager import ThreadManager
+from botify.server import WebServer
+
+if __name__ == "__main__":
+    stopping = threading.Event()
+    manager = ThreadManager()
+
+    def cleanup():
+        stopping.set()
+
+    # setup signal handlers
+    signal.signal(signal.SIGINT, cleanup)
+    signal.signal(signal.SIGTERM, cleanup)
+
+    manager.add(WebServer, { "host": "0.0.0.0", "port": 9000 })
+
+    try:
+        manager.start(timeout=10)
+    except Exception as e:
+        print("Failed to start Botify.")
+        print(e)
+    else:
+        print("Server running at http://0.0.0.0:9000")
+        while not stopping.wait(10):
+            manager.check()
+    finally:
+        manager.close(block=True)
