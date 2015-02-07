@@ -11,6 +11,7 @@ from botify.util.thread_manager import ThreadManager
 from botify.server import WebServer
 from botify.api import pool
 from botify import schema
+from botify.workers.botbot import BotBot
 
 if __name__ == "__main__":
     log.setup()
@@ -28,6 +29,10 @@ if __name__ == "__main__":
 
     pool.setup(manager)
     manager.add(WebServer, { "host": "0.0.0.0", "port": 9000 })
+
+    botbot_lock = threading.Lock()
+    for i in range(3):
+        manager.add(BotBot, { "dequeue_lock": botbot_lock, "index": i })
 
     try:
         manager.start(timeout=10)

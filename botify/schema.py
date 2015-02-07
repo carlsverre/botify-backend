@@ -19,6 +19,8 @@ TABLES = {
             created BIGINT NOT NULL,
             updated BIGINT NOT NULL,
             pending BOOL DEFAULT 0,
+            working BOOL DEFAULT 0,
+            pending_time BIGINT,
 
             text VARCHAR(1024) NOT NULL,
             metadata JSON,

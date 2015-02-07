@@ -1,5 +1,6 @@
 from functools import wraps
 from botify.util.attr_dict import AttrDict
+from botify import exceptions
 
 ENDPOINTS = {}
 
@@ -17,8 +18,11 @@ def endpoint(name, schema=None):
 
     return _deco
 
-def lookup(name):
-    return ENDPOINTS.get(name)
+def call(name, props):
+    endpoint = ENDPOINTS.get(name)
+    if endpoint is None:
+        raise exceptions.ApiException("Endpoint not found: %s" % name)
+    return endpoint(props)
 
 # import all endpoints here
 

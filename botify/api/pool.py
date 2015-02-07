@@ -1,6 +1,5 @@
 from botify.util.super_thread import SuperThread
 from tornado.concurrent import Future
-from botify import exceptions
 import Queue
 import sys
 import logging
@@ -29,13 +28,9 @@ class ApiRequest(object):
 
     def execute(self):
         try:
-            endpoint = endpoints.lookup(self.name)
-            if endpoint is None:
-                raise exceptions.ApiException("Endpoint not found: %s" % self.name)
-
-            response = endpoint(self.params)
+            response = endpoints.call(self.name, self.params)
             self.future.set_result(response)
-        except Exception as e:
+        except Exception:
             self.future.set_exc_info(sys.exc_info())
 
 def setup(thread_manager):
