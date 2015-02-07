@@ -116,22 +116,28 @@ def query_messages(stream_id=None, updated_since=None, pending_until=None, page=
         return rows
 
 def add_bot(stream_id, bot_id):
+    out = 0
     with db.connect() as c:
-        out = c.query("""
-            UPDATE stream SET bots=JSON_ARRAY_PUSH_STRING(bots, %s)
-            WHERE stream_id=%s
-        """, bot_id, stream_id)
+        row = c.get("SELECT bots FROM stream WHERE stream_id=%s", stream_id)
+        if row:
+            bots = set(json.loads(row.bots))
+            bots.add(bot_id)
+            out = c.query("""
+                UPDATE stream SET bots=%s WHERE stream_id=%s
+            """, json.dumps(list(bots)), stream_id)
 
     add_pending_message(stream_id, bot_id)
     return out
 
 def remove_bot(stream_id, bot_id):
     with db.connect() as c:
-        bots = json.loads(c.get("SELECT bots FROM stream WHERE stream_id=%s", stream_id))
-        bots.remove(bot_id)
-        return c.query("""
-            UPDATE stream SET bots=%s WHERE stream_id=%s
-        """, json.dumps(bots), stream_id)
+        row = c.get("SELECT bots FROM stream WHERE stream_id=%s", stream_id)
+        if row:
+            bots = json.loads(row.bots)
+            bots.remove(bot_id)
+            return c.query("""
+                UPDATE stream SET bots=%s WHERE stream_id=%s
+            """, json.dumps(bots), stream_id)
 
 @endpoint("stream/create")
 def stream_create(params):
