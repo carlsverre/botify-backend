@@ -7,8 +7,15 @@ from botify.util import json
 
 class ApiHttpHandler(web.RequestHandler):
     def prepare(self):
+        """ Make sure that all responses include our access-control-allow-origin policy. """
         self.set_header('Content-Type', 'application/json')
         self.set_header('Cache-control', 'no-cache')
+        self.set_header("Access-Control-Allow-Origin", "*")
+
+    def options(self):
+        """ ``options`` is implemented to handle Access-Control-Allow-Origin requests. """
+        self.set_status(204)
+        self.finish()
 
     @web.removeslash
     @gen.coroutine
