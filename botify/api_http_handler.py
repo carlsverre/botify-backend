@@ -2,12 +2,8 @@ from tornado import web
 from tornado import gen
 
 import simplejson as json
-
-class ApiException(Exception):
-    pass
-
-class JSONDecodeError(ApiException):
-    pass
+from botify.exceptions import ApiException, JSONDecodeError
+from botify.api import pool
 
 class ApiHttpHandler(web.RequestHandler):
     def prepare(self):
@@ -26,32 +22,8 @@ class ApiHttpHandler(web.RequestHandler):
     def post(self, name):
         try:
             params = self._params()
-            self._respond_success({ "you_said": params })
-            """
-            result = self.__api.call(name, params, remote=True)
-
-            if isinstance(result, futures.Future):
-                result = yield result
-                self._respond_success(result)
-
-            elif isinstance(result, StreamFollower):
-                self.set_status(200)
-
-                for chunk in result:
-                    if self._closed:
-                        break
-
-                    if isinstance(chunk, futures.Future):
-                        chunk = yield chunk
-
-                    self._write_json(chunk)
-                    self.write("\n")
-                    self.flush()
-
-                self.finish()
-            else:
-                self._respond_success(result)
-            """
+            response = yield pool.query(name, params)
+            self._respond_success(response)
         except Exception as err:
             self._respond_error(err)
 

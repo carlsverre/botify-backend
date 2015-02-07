@@ -113,8 +113,6 @@ class ThreadManager(object):
                         logger.info("%s exiting" % info.Class.__name__)
                         continue
 
-                    diagnostics.log_exception(info.instance.get_exc_info())
-
                     if raise_exceptions:
                         raise info.instance.get_exception()
                     else:

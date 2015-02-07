@@ -6,20 +6,25 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__
 import signal
 import threading
 
+from botify import log
 from botify.util.thread_manager import ThreadManager
 from botify.server import WebServer
+from botify.api import pool
 
 if __name__ == "__main__":
+    log.setup()
+
     stopping = threading.Event()
     manager = ThreadManager()
 
-    def cleanup():
+    def cleanup(*a):
         stopping.set()
 
     # setup signal handlers
     signal.signal(signal.SIGINT, cleanup)
     signal.signal(signal.SIGTERM, cleanup)
 
+    pool.setup(manager)
     manager.add(WebServer, { "host": "0.0.0.0", "port": 9000 })
 
     try:
@@ -31,5 +36,6 @@ if __name__ == "__main__":
         print("Server running at http://0.0.0.0:9000")
         while not stopping.wait(10):
             manager.check()
+            pool.status()
     finally:
         manager.close(block=True)

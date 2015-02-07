@@ -51,4 +51,7 @@ else
 
     # make sure we can run all of our tools
     export PATH="$ROOTDIR/bin:$PATH"
+
+    export DB_HOST=$(boot2docker ip)
+    export DB_PORT=3306
 fi
