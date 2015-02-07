@@ -1,9 +1,9 @@
 from tornado import web
 from tornado import gen
 
-import simplejson as json
 from botify.exceptions import ApiException, JSONDecodeError
 from botify.api import pool
+from botify.util import json
 
 class ApiHttpHandler(web.RequestHandler):
     def prepare(self):

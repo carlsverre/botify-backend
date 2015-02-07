@@ -4,8 +4,8 @@ PoolConnectionException = connection_pool.PoolConnectionException
 MySQLError = database.MySQLError
 
 import os
-DB_HOST = os.environ("DB_HOST")
-DB_PORT = os.environ("DB_PORT")
+DB_HOST = os.getenv("DB_HOST", "127.1")
+DB_PORT = os.getenv("DB_PORT", 9000)
 DB_NAME = "botify"
 
 POOL = connection_pool.ConnectionPool()

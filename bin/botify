@@ -10,9 +10,11 @@ from botify import log
 from botify.util.thread_manager import ThreadManager
 from botify.server import WebServer
 from botify.api import pool
+from botify import schema
 
 if __name__ == "__main__":
     log.setup()
+    schema.setup()
 
     stopping = threading.Event()
     manager = ThreadManager()
