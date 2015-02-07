@@ -52,6 +52,11 @@ else
     # make sure we can run all of our tools
     export PATH="$ROOTDIR/bin:$PATH"
 
-    export DB_HOST=$(boot2docker ip)
-    export DB_PORT=3306
+    if [ "$(hostname)" = "carlface.local" ]; then
+        export DB_HOST=$(boot2docker ip)
+        export DB_PORT=3306
+    else
+        export DB_HOST=127.1
+        export DB_PORT=3307
+    fi
 fi
