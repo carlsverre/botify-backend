@@ -42,8 +42,8 @@ def get_pending_message():
         candidate = candidates[0]
         with db.connect() as c:
             c.execute(
-                "UPDATE message SET working=True WHERE message_id=%s",
-                candidate.message_id)
+                "UPDATE message SET working=%s WHERE message_id=%s",
+                unix_timestamp(), candidate.message_id)
         return candidate
 
 def add_pending_message(stream_id, bot_id):
@@ -76,12 +76,12 @@ def query_messages(stream_id=None, updated_since=None, pending_until=None, page=
     if pending_until is not None:
         sql.append("pending_time < %s")
         params.append(pending_until)
-    if working is not None:
-        sql.append("working = %s")
-        params.append(working)
     if pending is not None:
         sql.append("pending = %s")
         params.append(pending)
+    if working is False:
+        sql.append("(working IS NULL OR working < %s)")
+        params.append(unix_timestamp() - 60)
     if null_metadata is not None:
         if null_metadata:
             sql.append("metadata = 'null'")
