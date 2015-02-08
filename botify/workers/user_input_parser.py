@@ -30,6 +30,6 @@ class UserInputParser(SuperThread):
                 return
 
             stream.update_message(
-                message_id=pending.message_id,
-                text=pending.text,
+                message_id=msg.message_id,
+                text=msg.text,
                 metadata=new_metadata)
