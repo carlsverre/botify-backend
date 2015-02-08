@@ -14,7 +14,7 @@ from botify import schema
 
 from botify.workers.botbot import BotBot
 from botify.workers.user_input_parser import UserInputParser
-from botify.workers.user_input_parser import Podcast
+from botify.workers.podcast import Podcast
 
 if __name__ == "__main__":
     log.setup()
