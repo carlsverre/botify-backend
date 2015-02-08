@@ -9,8 +9,8 @@ from botify.api import bot
 
 STREAM_ID = 1
 
-MIN_CHANGE = 10
-MAX_CHANGE = 30
+MIN_CHANGE = 5
+MAX_CHANGE = 20
 
 MIN_BOTS = 2
 MAX_BOTS = 4
