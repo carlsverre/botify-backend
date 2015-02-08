@@ -10,13 +10,13 @@ from botify.api import bot
 STREAM_ID = 1
 
 MIN_CHANGE = 5
-MAX_CHANGE = 20
+MAX_CHANGE = 5
 
 MIN_BOTS = 2
 MAX_BOTS = 4
 
 class Podcast(SuperThread):
-    sleep = 5
+    sleep = 2
 
     def setup(self):
         self.logger = logging.getLogger(__name__)
