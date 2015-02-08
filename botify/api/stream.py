@@ -83,6 +83,8 @@ def query_messages(stream_id=None, updated_since=None, pending_until=None, page=
         sql.append("(working IS NULL OR working < %s)")
         params.append(unix_timestamp() - 60)
     if null_metadata is not None:
+        # only look for bots without metadata
+        sql.append("bot_id IS NULL")
         if null_metadata:
             sql.append("metadata = 'null'")
         else:
