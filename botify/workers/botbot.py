@@ -61,7 +61,7 @@ class BotBot(SuperThread):
         else:
             return
 
-        self.logger.error("Bot %s on stream %s saying: %s" % (bot_id, stream_id, new_text))
+        self.logger.info("Bot %s on stream %s saying: %s" % (bot_id, stream_id, new_text))
 
         # 5. post a new pending message
         stream.add_pending_message(stream_id, bot_id)
