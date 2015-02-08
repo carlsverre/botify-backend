@@ -47,7 +47,7 @@ def get_pending_message():
         return candidate
 
 def add_pending_message(stream_id, bot_id):
-    target_time = unix_timestamp() + random.uniform(4, 10)
+    target_time = unix_timestamp() + random.uniform(5, 15)
     create_message(
         stream_id=stream_id,
         text="",
@@ -164,7 +164,7 @@ def stream_append(params):
     "stream_id": int,
     "updated_since": G.Maybe(int),
     "page": G.Any(int, G.Default(0), G.Range(0, 999)),
-    "page_size": G.Any(int, G.Default(100), G.Range(1, 200)),
+    "page_size": G.Any(int, G.Default(20), G.Range(1, 200)),
     "order_dir": G.Any("DESC", "ASC", G.Default("DESC")),
     "order_by": G.Any("created", "updated", G.Default("updated"))
 }))

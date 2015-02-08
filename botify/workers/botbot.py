@@ -47,16 +47,21 @@ class BotBot(SuperThread):
                 metadata[k] += v
 
         # 4. send generate to joyo
-        try:
-            new_message = client.generate(bot_id, metadata)
-            if not new_message["success"]:
-                raise Exception(json.pretty_dumps(new_message))
-            else:
-                new_text = new_message["body"]
-                new_metadata = new_message.get("symbols", {})
-        except Exception as e:
-            self.logger.error("Client call failure: %s" % str(e))
+        for _ in range(5):
+            try:
+                new_message = client.generate(bot_id, metadata)
+                if not new_message["success"]:
+                    raise Exception(json.pretty_dumps(new_message))
+                else:
+                    new_text = new_message["body"]
+                    new_metadata = new_message.get("symbols", {})
+                    break
+            except Exception as e:
+                self.logger.error("Client call failure: %s" % str(e))
+        else:
             return
+
+        self.logger.error("Bot %s on stream %s saying: %s" % (bot_id, stream_id, new_text))
 
         # 5. post a new pending message
         stream.add_pending_message(stream_id, bot_id)
