@@ -8,7 +8,7 @@ from botify.api import endpoints
 
 logger = logging.getLogger(__name__)
 REQUEST_QUEUE = Queue.Queue()
-NUM_WORKERS = 20
+NUM_WORKERS = 10
 
 class ApiWorker(SuperThread):
     sleep = 0.1
