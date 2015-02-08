@@ -8,7 +8,7 @@ def create_bot(bot_id, name, sex, seed_text_path, photo_url):
     now = unix_timestamp()
     with db.connect() as c:
         return c.execute("""
-            INSERT INTO bot (id, created, updated, name, sex, seed_text_path, photo_url)
+            INSERT INTO bot (bot_id, created, updated, name, sex, seed_text_path, photo_url)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, bot_id, now, now, name, sex, seed_text_path, photo_url)
 
