@@ -31,7 +31,7 @@ class Podcast(SuperThread):
         if time.time() > self.next_change:
             self.next_change = time.time() + random.randint(MIN_CHANGE, MAX_CHANGE)
 
-            current_bots = stream.bots_in_stream()
+            current_bots = stream.bots_in_stream(stream_id=STREAM_ID)
             all_bots = bot.query_bots()
 
             if current_bots and len(current_bots) > MIN_BOTS:
