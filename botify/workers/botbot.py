@@ -2,9 +2,10 @@ import logging
 from collections import defaultdict
 
 from botify.util.super_thread import SuperThread
+from botify.util import json
 
 from botify.api import stream
-from botify.util.time_helpers import unix_timestamp
+import botify.joyo_client as client
 
 NUM_MESSAGE_CONTEXT = 5
 
@@ -46,12 +47,16 @@ class BotBot(SuperThread):
                 metadata[k] += v
 
         # 4. send generate to joyo
-        # TODO: send generate request
-        # TODO: error handling
-        new_message = {
-            "text": "foobar I am some generated stuff",
-            "metadata": { "foobar": 1 }
-        }
+        try:
+            new_message = client.generate(bot_id, metadata)
+            if not new_message["success"]:
+                raise Exception(json.pretty_dumps(new_message))
+            else:
+                new_text = new_message["body"]
+                new_metadata = new_message.get("symbols", {})
+        except Exception as e:
+            self.logger.error("Client call failure: %s" % str(e))
+            return
 
         # 5. post a new pending message
         stream.add_pending_message(stream_id, bot_id)
@@ -59,6 +64,6 @@ class BotBot(SuperThread):
         # 6. post the new message
         stream.update_pending_message(
             message_id=candidate.message_id,
-            text=new_message["text"],
-            metadata=new_message["metadata"]
+            text=new_text,
+            metadata=new_metadata
         )
