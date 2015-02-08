@@ -26,6 +26,17 @@ def ping_stream(stream_id):
             WHERE stream_id = %s
         """, unix_timestamp(), stream_id)
 
+def bots_in_stream(stream_id):
+    with db.connect() as c:
+        row = c.get("""
+            SELECT bots FROM stream
+            WHERE stream_id = %s
+        """, stream_id)
+        if row:
+            return json.loads(row.bots)
+        else:
+            return []
+
 def create_message(stream_id, text, bot_id=None, pending=False, pending_time=None, metadata=None):
     now = unix_timestamp()
 
@@ -140,10 +151,11 @@ def remove_bot(stream_id, bot_id):
         row = c.get("SELECT bots FROM stream WHERE stream_id=%s", stream_id)
         if row:
             bots = json.loads(row.bots)
-            bots.remove(bot_id)
-            return c.query("""
-                UPDATE stream SET bots=%s WHERE stream_id=%s
-            """, json.dumps(bots), stream_id)
+            if bot_id in bots:
+                bots.remove(bot_id)
+                return c.query("""
+                    UPDATE stream SET bots=%s WHERE stream_id=%s
+                """, json.dumps(bots), stream_id)
 
 @endpoint("stream/create")
 def stream_create(params):
