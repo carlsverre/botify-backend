@@ -34,7 +34,9 @@ class Podcast(SuperThread):
             current_bots = stream.bots_in_stream(stream_id=STREAM_ID)
             all_bots = bot.query_bots()
 
-            if current_bots and len(current_bots) > MIN_BOTS:
+            self.logger.info("Podcast currently has %d participants" % len(current_bots))
+
+            if len(current_bots) > MIN_BOTS:
                 to_remove = random.choice(current_bots)
                 current_bots.remove(to_remove)
 
@@ -44,6 +46,7 @@ class Podcast(SuperThread):
                         all_bots.remove(b)
                         to_remove_bot = b
 
+                self.logger.info("Removing %s from stream" % to_remove_bot.name)
                 stream.remove_bot(STREAM_ID, to_remove)
                 stream.create_message(STREAM_ID,
                     "%s has left the room" % to_remove_bot.name,
@@ -52,6 +55,7 @@ class Podcast(SuperThread):
             if len(current_bots) < MAX_BOTS and random.random() > 0.5:
                 to_add = random.choice(all_bots)
 
+                self.logger.info("Adding %s to stream" % to_add.name)
                 stream.create_message(STREAM_ID,
                     "%s has joined the room" % to_add.name,
                     metadata={ to_add.name: 1 })
