@@ -12,6 +12,7 @@ from botify.server import WebServer
 from botify.api import pool
 from botify import schema
 from botify.workers.botbot import BotBot
+from botify.workers.user_input_parser import UserInputParser
 
 if __name__ == "__main__":
     log.setup()
@@ -33,6 +34,7 @@ if __name__ == "__main__":
     botbot_lock = threading.Lock()
     for i in range(3):
         manager.add(BotBot, { "dequeue_lock": botbot_lock, "index": i })
+    manager.add(UserInputParser, {})
 
     try:
         manager.start(timeout=10)

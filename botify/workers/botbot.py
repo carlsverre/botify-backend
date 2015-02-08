@@ -62,7 +62,7 @@ class BotBot(SuperThread):
         stream.add_pending_message(stream_id, bot_id)
 
         # 6. post the new message
-        stream.update_pending_message(
+        stream.update_message(
             message_id=candidate.message_id,
             text=new_text,
             metadata=new_metadata

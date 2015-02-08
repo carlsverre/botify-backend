@@ -21,8 +21,6 @@ def ping_stream(stream_id):
         """, unix_timestamp(), stream_id)
 
 def create_message(stream_id, text, bot_id=None, pending=False, pending_time=None, metadata=None):
-    if metadata is None:
-        metadata = {}
     now = unix_timestamp()
 
     with db.connect() as c:
@@ -58,7 +56,7 @@ def add_pending_message(stream_id, bot_id):
         pending_time=target_time
     )
 
-def update_pending_message(message_id, text, metadata):
+def update_message(message_id, text, metadata):
     with db.connect() as c:
         return c.execute("""
             UPDATE message
@@ -86,9 +84,9 @@ def query_messages(stream_id=None, updated_since=None, pending_until=None, page=
         params.append(pending)
     if null_metadata is not None:
         if null_metadata:
-            sql.append("metadata IS NULL")
+            sql.append("metadata = 'null'")
         else:
-            sql.append("metadata IS NOT NULL")
+            sql.append("metadata != 'null'")
 
     params.append(page_size)
     params.append(page_size * page)
