@@ -4,13 +4,13 @@ from botify import db
 from botify.api.endpoints import endpoint
 from botify.util.time_helpers import unix_timestamp
 
-def create_bot(name, sex, seed_text_path, photo_url):
+def create_bot(bot_id, name, sex, seed_text_path, photo_url):
     now = unix_timestamp()
     with db.connect() as c:
         return c.execute("""
-            INSERT INTO bot (created, updated, name, sex, seed_text_path, photo_url)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, now, now, name, sex, seed_text_path, photo_url)
+            INSERT INTO bot (id, created, updated, name, sex, seed_text_path, photo_url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, bot_id, now, now, name, sex, seed_text_path, photo_url)
 
 def query_bots(name=None, page=0, page_size=100):
     sql, params = [], []

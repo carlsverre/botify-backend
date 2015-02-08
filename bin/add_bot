@@ -9,10 +9,11 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--id", help="the bot id", required=True)
     parser.add_argument("-n", "--name", help="the bot name", required=True)
     parser.add_argument("-u", "--url", help="the bot image url", required=True)
     parser.add_argument("-s", "--sex", help="the bot sex", required=True)
 
     options = parser.parse_args(sys.argv[1:])
 
-    print(bot.create_bot(name=options.name, sex=options.sex, seed_text_path="", photo_url=options.url))
+    print(bot.create_bot(bot_id=options.id, name=options.name, sex=options.sex, seed_text_path="", photo_url=options.url))
