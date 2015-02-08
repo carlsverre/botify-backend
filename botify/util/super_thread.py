@@ -125,7 +125,7 @@ class SuperThread(threading.Thread):
     def get_exception(self):
         """ If the thread exited due to an exception, return the exception instance. """
         _, exc_inst, traceback = self._exception
-        return exc_inst.with_traceback(traceback)
+        return exc_inst
 
     def get_exc_info(self):
         """ If the thread exited due to an exception, return the exc_info. """
