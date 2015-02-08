@@ -47,7 +47,7 @@ def get_pending_message():
         return candidate
 
 def add_pending_message(stream_id, bot_id):
-    target_time = unix_timestamp() + random.uniform(2, 10)
+    target_time = unix_timestamp() + random.uniform(4, 10)
     create_message(
         stream_id=stream_id,
         text="",
