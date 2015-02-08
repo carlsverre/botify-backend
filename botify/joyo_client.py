@@ -2,7 +2,7 @@ import requests
 from botify.util import json
 
 def call(name, args):
-    out = requests.post("http://localhost:5000/%s", json.dumps(args))
+    out = requests.post("http://localhost:5000/%s" % name, json.dumps(args))
     return out.json()
 
 def generate(bot_id, metadata):
