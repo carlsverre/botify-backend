@@ -6,12 +6,18 @@ from botify.api.endpoints import endpoint
 from botify.util import json
 from botify.util.time_helpers import unix_timestamp
 
-def create_stream():
+def create_stream(stream_id=None):
     with db.connect() as c:
-        return c.execute("""
-            INSERT INTO stream (created, bots, keep_alive)
-            VALUES (%s, %s, %s)
-        """, unix_timestamp(), json.dumps([]), unix_timestamp())
+        if stream_id is None:
+            return c.execute("""
+                INSERT INTO stream (created, bots, keep_alive)
+                VALUES (%s, %s, %s)
+            """, unix_timestamp(), json.dumps([]), unix_timestamp())
+        else:
+            return c.execute("""
+                INSERT IGNORE INTO stream (stream_id, created, bots, keep_alive)
+                VALUES (%s, %s, %s, %s)
+            """, stream_id, unix_timestamp(), json.dumps([]), unix_timestamp())
 
 def ping_stream(stream_id):
     with db.connect() as c:
@@ -102,7 +108,7 @@ def query_messages(stream_id=None, updated_since=None, pending_until=None, page=
     with db.connect() as c:
         rows = c.query("""
             SELECT
-                stream.stream_id, message_id, bot_id, updated, pending, text, metadata
+                stream.stream_id, message_id, bot_id, updated, pending, pending_time, text, metadata
             FROM message
             INNER JOIN stream ON message.stream_id = stream.stream_id
             WHERE stream.keep_alive > %s

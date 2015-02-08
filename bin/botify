@@ -11,8 +11,10 @@ from botify.util.thread_manager import ThreadManager
 from botify.server import WebServer
 from botify.api import pool
 from botify import schema
+
 from botify.workers.botbot import BotBot
 from botify.workers.user_input_parser import UserInputParser
+from botify.workers.user_input_parser import Podcast
 
 if __name__ == "__main__":
     log.setup()
@@ -35,6 +37,7 @@ if __name__ == "__main__":
     for i in range(3):
         manager.add(BotBot, { "dequeue_lock": botbot_lock, "index": i })
     manager.add(UserInputParser, {})
+    manager.add(Podcast, {})
 
     try:
         manager.start(timeout=10)
