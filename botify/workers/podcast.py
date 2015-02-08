@@ -9,8 +9,8 @@ from botify.api import bot
 
 STREAM_ID = 1
 
-MIN_CHANGE = 30
-MAX_CHANGE = 90
+MIN_CHANGE = 10
+MAX_CHANGE = 30
 
 MIN_BOTS = 2
 MAX_BOTS = 4
@@ -22,7 +22,7 @@ class Podcast(SuperThread):
         self.logger = logging.getLogger(__name__)
         # ensure stream exists
         stream.create_stream(stream_id=STREAM_ID)
-        self.next_change = time.time() + 60
+        self.next_change = time.time() + (MAX_CHANGE / 2)
 
     def work(self):
         # make sure the stream stays alive
