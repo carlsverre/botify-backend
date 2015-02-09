@@ -73,6 +73,13 @@ def add_pending_message(stream_id, bot_id):
         pending_time=target_time
     )
 
+def kill_pending_messages(stream_id, bot_id):
+    with db.connect() as c:
+        c.query("""
+            DELETE FROM message
+            WHERE stream_id=%s AND bot_id=%s AND pending=true
+        """, stream_id, bot_id)
+
 def update_message(message_id, text, metadata):
     with db.connect() as c:
         return c.execute("""
@@ -153,6 +160,7 @@ def remove_bot(stream_id, bot_id):
             bots = json.loads(row.bots)
             if bot_id in bots:
                 bots.remove(bot_id)
+                kill_pending_messages(stream_id, bot_id)
                 return c.query("""
                     UPDATE stream SET bots=%s WHERE stream_id=%s
                 """, json.dumps(bots), stream_id)

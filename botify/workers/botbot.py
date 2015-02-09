@@ -10,7 +10,7 @@ import botify.joyo_client as client
 NUM_MESSAGE_CONTEXT = 5
 
 class BotBot(SuperThread):
-    sleep = 1
+    sleep = 0.1
 
     def setup(self):
         self.dequeue_lock = self.context["dequeue_lock"]
@@ -27,6 +27,12 @@ class BotBot(SuperThread):
 
         stream_id = candidate.stream_id
         bot_id = candidate.bot_id
+
+        # make sure we are supposed to write in this stream
+        current_bots = stream.bots_in_stream(stream_id=stream_id)
+        if bot_id not in current_bots:
+            stream.kill_pending_messages(stream_id, bot_id)
+            return
 
         self.logger.info("Grabbed %s" % candidate)
 
