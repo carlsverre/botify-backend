@@ -34,7 +34,7 @@ if __name__ == "__main__":
     manager.add(WebServer, { "host": "0.0.0.0", "port": 9000 })
 
     botbot_lock = threading.Lock()
-    for i in range(10):
+    for i in range(15):
         manager.add(BotBot, { "dequeue_lock": botbot_lock, "index": i })
     manager.add(UserInputParser, {})
     manager.add(Podcast, {})
