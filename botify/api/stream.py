@@ -63,8 +63,12 @@ def get_pending_message():
                 unix_timestamp(), candidate.message_id)
         return candidate
 
-def add_pending_message(stream_id, bot_id):
-    target_time = unix_timestamp() + random.uniform(5, 15)
+def add_pending_message(stream_id, bot_id, soon=False):
+    if soon:
+        target_time = unix_timestamp() + random.uniform(0, 3)
+    else:
+        target_time = unix_timestamp() + random.uniform(5, 15)
+
     create_message(
         stream_id=stream_id,
         text="",
@@ -150,7 +154,7 @@ def add_bot(stream_id, bot_id):
                 UPDATE stream SET bots=%s WHERE stream_id=%s
             """, json.dumps(list(bots)), stream_id)
 
-    add_pending_message(stream_id, bot_id)
+    add_pending_message(stream_id, bot_id, soon=True)
     return out
 
 def remove_bot(stream_id, bot_id):
