@@ -7,7 +7,7 @@ from botify.util import json
 from botify.api import stream
 import botify.joyo_client as client
 
-NUM_MESSAGE_CONTEXT = 5
+NUM_MESSAGE_CONTEXT = 3
 
 class BotBot(SuperThread):
     sleep = 0.1
